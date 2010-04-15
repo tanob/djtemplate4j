@@ -18,7 +18,7 @@ public class Variable {
 
     public String render(Map<String, Object> context) {
         if (this.complexLookup) {
-            final LinkedList lookupPath = new LinkedList(Arrays.asList(this.variableName.split(VARIABLE_LOOKUP_SEPARATOR_REGEX)));
+            final LinkedList<String> lookupPath = new LinkedList<String>(Arrays.asList(this.variableName.split(VARIABLE_LOOKUP_SEPARATOR_REGEX)));
             return complexResolve(lookupPath, context);
         }
         return simpleLookupOnMap(this.variableName, context);
@@ -29,7 +29,7 @@ public class Variable {
 
         if (stringObjectMap.containsKey(stringKey)) {
             final Object objValue = context.get(stringObjectMap.get(stringKey));
-            return objValue != null ? objValue.toString() : NULL;
+            return objToString(objValue);
         }
 
         throw new VariableDoesNotExist(this.variableName);
@@ -56,8 +56,12 @@ public class Variable {
     private Map<String, Object> mapObjKeysToStringKeys(Set<?> objKeys) {
         Map<String, Object> mapStringKeyToObjKey = new HashMap<String, Object>();
         for (Object objKey : objKeys) {
-            mapStringKeyToObjKey.put(objKey != null ? objKey.toString() : NULL, objKey);
+            mapStringKeyToObjKey.put(objToString(objKey), objKey);
         }
         return mapStringKeyToObjKey;
+    }
+
+    private String objToString(Object obj) {
+        return obj != null ? obj.toString() : NULL;
     }
 }
