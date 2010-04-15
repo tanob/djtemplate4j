@@ -59,4 +59,16 @@ public class VariableTest {
         
         assertEquals("null", output);
     }
+
+    @Test
+    public void shouldSupportMapKeysThatAreNotString() throws Exception {
+        final Variable variable = new Variable("ages.16");
+        final HashMap<Integer, String> ages = new HashMap<Integer, String>();
+        ages.put(16, "16 years");
+        context.put("ages", ages);
+        
+        final String output = variable.render(context);
+
+        assertEquals("16 years", output);
+    }
 }

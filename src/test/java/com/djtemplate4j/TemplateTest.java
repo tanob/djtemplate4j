@@ -10,6 +10,11 @@ import static org.junit.Assert.assertEquals;
 public class TemplateTest {
     private HashMap<String, Object> context;
 
+    @Before
+    public void setUp() throws Exception {
+        context = new HashMap<String, Object>();
+    }
+
     @Test
     public void shouldRenderAStaticTemplate() throws Exception {
         final Template template = new Template("Hello world!");
@@ -21,9 +26,8 @@ public class TemplateTest {
     @Test
     public void shouldRenderAVariable() throws Exception {
         final Template template = new Template("Hello, {{ name }}!");
-        final HashMap<String, Object> context = new HashMap<String, Object>();
         context.put("name", "Haskell Curry");
-        
+
         final String output = template.render(context);
         assertEquals("Hello, Haskell Curry!", output);
     }
@@ -31,7 +35,6 @@ public class TemplateTest {
     @Test(expected = VariableDoesNotExist.class)
     public void shouldThrowAnExceptionWhenVariableDoesNotExist() throws Exception {
         final Template template = new Template("Hello, {{ firstName }} {{ lastName }}!");
-        final HashMap<String, Object> context = new HashMap<String, Object>();
         context.put("lastName", "Curry");
         template.render(context);
     }
@@ -45,7 +48,7 @@ public class TemplateTest {
 
         context.put("person", person);
         final String output = template.render(context);
-        
+
         assertEquals("Hello, Haskell Curry!", output);
     }
 
@@ -57,10 +60,5 @@ public class TemplateTest {
         final String output = template.render(context);
 
         assertEquals("Hello, null!", output);
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        context = new HashMap<String, Object>();
     }
 }
