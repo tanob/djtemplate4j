@@ -32,4 +32,18 @@ public class TemplateTest {
         context.put("lastName", "Curry");
         template.render(context);
     }
+
+    @Test
+    public void shouldSupportVariablesThatAreMaps() throws Exception {
+        final Template template = new Template("Hello, {{ person.firstName }} {{ person.lastName }}!");
+        final HashMap<String, String> person = new HashMap<String, String>();
+        person.put("firstName", "Haskell");
+        person.put("lastName", "Curry");
+
+        final HashMap<String, Object> context = new HashMap<String, Object>();
+        context.put("person", person);
+        final String output = template.render(context);
+        
+        assertEquals("Hello, Haskell Curry!", output);
+    }
 }

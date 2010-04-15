@@ -10,9 +10,6 @@ public class VariableNode implements Node {
     }
 
     public String render(Map<String, Object> context) {
-        if (context.containsKey(this.variableName)) {
-            return (String) context.get(this.variableName);
-        }
-        throw new VariableDoesNotExist(this.variableName);
+        return new Variable(this.variableName).render(context);
     }
 }
