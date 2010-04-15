@@ -11,6 +11,7 @@ public class Variable {
 
     private final String variableName;
     private boolean complexLookup;
+    private static final String NULL = "null";
 
     public Variable(String variableName) {
         this.variableName = variableName;
@@ -27,7 +28,8 @@ public class Variable {
 
     private String simpleLookupOnMap(String variableName, Map<String, Object> context) {
         if (context.containsKey(variableName)) {
-            return (String) context.get(variableName);
+            final Object value = context.get(variableName);
+            return value != null ? value.toString() : NULL;
         }
         throw new VariableDoesNotExist(this.variableName);
     }

@@ -1,5 +1,6 @@
 package com.djtemplate4j;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -7,6 +8,8 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 
 public class TemplateTest {
+    private HashMap<String, Object> context;
+
     @Test
     public void shouldRenderAStaticTemplate() throws Exception {
         final Template template = new Template("Hello world!");
@@ -40,10 +43,24 @@ public class TemplateTest {
         person.put("firstName", "Haskell");
         person.put("lastName", "Curry");
 
-        final HashMap<String, Object> context = new HashMap<String, Object>();
         context.put("person", person);
         final String output = template.render(context);
         
         assertEquals("Hello, Haskell Curry!", output);
+    }
+
+    @Test
+    public void shouldRenderNull() throws Exception {
+        final Template template = new Template("Hello, {{ name }}!");
+
+        context.put("name", null);
+        final String output = template.render(context);
+
+        assertEquals("Hello, null!", output);
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        context = new HashMap<String, Object>();
     }
 }

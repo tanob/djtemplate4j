@@ -50,4 +50,13 @@ public class VariableTest {
         context.put("person", new HashMap<String, String>());
         variable.render(context);
     }
+
+    @Test
+    public void shouldRenderNull() throws Exception {
+        final Variable variable = new Variable("name");
+        context.put("name", null);
+        final String output = variable.render(context);
+        
+        assertEquals("null", output);
+    }
 }
