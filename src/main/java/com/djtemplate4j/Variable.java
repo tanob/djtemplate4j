@@ -26,19 +26,19 @@ public class Variable {
         this.complexLookup = this.variable.contains(VARIABLE_LOOKUP_SEPARATOR);
     }
 
-    public String render(Map<String, Object> context) {
+    public String render(Context context) {
         return render(context, Arrays.asList(mapLookup, new GetterVariableLookup(), new MethodVariableLookup()));
     }
 
-    public String render(Map<String, Object> context, List<VariableLookup> lookupImpls) {
+    public String render(Context context, List<VariableLookup> lookupImpls) {
         final Object objToRender;
 
         if (this.complexLookup) {
             final LinkedList<String> lookupPath = new LinkedList<String>(Arrays.asList(this.variable.split(VARIABLE_LOOKUP_SEPARATOR_REGEX)));
-            final Object target = simpleLookupOnMap(lookupPath.pop(), context);
+            final Object target = simpleLookupOnMap(lookupPath.pop(), context.getVariables());
             objToRender = complexLookup(lookupPath, target, lookupImpls);
         } else {
-            objToRender = simpleLookupOnMap(this.variable, context);
+            objToRender = simpleLookupOnMap(this.variable, context.getVariables());
         }
 
         return objToStringOrNull(objToRender);

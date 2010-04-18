@@ -8,12 +8,14 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 
 public class Variable_MethodLookupTest {
-    private Map<String, Object> context;
+    private Map<String, Object> variables;
     private List<VariableLookup> lookupImpls;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
-        context = new HashMap<String, Object>();
+        variables = new HashMap<String, Object>();
+        context = new Context(variables, Collections.<String, Filter>emptyMap());
         lookupImpls = new ArrayList<VariableLookup>();
         lookupImpls.add(new MethodVariableLookup());
     }
@@ -22,7 +24,7 @@ public class Variable_MethodLookupTest {
     public void shouldRenderAValueReturnedFromAMethodCall() throws Exception {
         final Variable variable = new Variable("list.size");
 
-        context.put("list", Arrays.asList(1, 2));
+        variables.put("list", Arrays.asList(1, 2));
         final String output = variable.render(context, lookupImpls);
         
         assertEquals("2", output);
@@ -32,7 +34,7 @@ public class Variable_MethodLookupTest {
     public void shouldThrowVariableDoesNotExistWhenMethodDoesNotExist() throws Exception {
         final Variable variable = new Variable("list.somethingThatDoesNotExist");
         
-        context.put("list", Arrays.asList(1, 2));
+        variables.put("list", Arrays.asList(1, 2));
         variable.render(context, lookupImpls);
     }
 }

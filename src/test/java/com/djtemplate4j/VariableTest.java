@@ -3,17 +3,20 @@ package com.djtemplate4j;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 public class VariableTest {
-    private Map<String, Object> context;
+    private Map<String, Object> variables;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
-        context = new HashMap<String, Object>();
+        variables = new HashMap<String, Object>();
+        context = new Context(variables, Collections.<String, Filter>emptyMap());
     }
 
     @Test(expected = VariableDoesNotExist.class)
@@ -25,7 +28,7 @@ public class VariableTest {
     @Test
     public void shouldSupportDirectVariables() throws Exception {
         final Variable variable = new Variable("name");
-        context.put("name", "Haskell");
+        variables.put("name", "Haskell");
         final String output = variable.render(context);
 
         assertEquals("Haskell", output);
@@ -34,7 +37,7 @@ public class VariableTest {
     @Test
     public void shouldRenderNull() throws Exception {
         final Variable variable = new Variable("name");
-        context.put("name", null);
+        variables.put("name", null);
         final String output = variable.render(context);
 
         assertEquals("null", output);

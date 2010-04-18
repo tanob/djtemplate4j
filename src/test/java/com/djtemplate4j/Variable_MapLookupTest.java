@@ -3,20 +3,19 @@ package com.djtemplate4j;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class Variable_MapLookupTest {
-    private Map<String, Object> context;
+    private Map<String, Object> variables;
     private List<VariableLookup> lookupImpls;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
-        context = new HashMap<String, Object>();
+        variables = new HashMap<String, Object>();
+        context = new Context(variables, Collections.<String, Filter>emptyMap());
         lookupImpls = new ArrayList<VariableLookup>();
         lookupImpls.add(new MapVariableLookup());
     }
@@ -28,7 +27,7 @@ public class Variable_MapLookupTest {
         Map<String, String> person = new HashMap<String, String>();
         person.put("name", "Haskell");
 
-        context.put("person", person);
+        variables.put("person", person);
         final String output = variable.render(context, lookupImpls);
 
         assertEquals("Haskell", output);
@@ -37,7 +36,7 @@ public class Variable_MapLookupTest {
     @Test(expected = VariableDoesNotExist.class)
     public void shouldThrowExceptionIfMapLookupDoesNotFindVariable() throws Exception {
         final Variable variable = new Variable("person.name");
-        context.put("person", new HashMap<String, String>());
+        variables.put("person", new HashMap<String, String>());
         variable.render(context, lookupImpls);
     }
 
@@ -46,7 +45,7 @@ public class Variable_MapLookupTest {
         final Variable variable = new Variable("ages.16");
         final HashMap<Integer, String> ages = new HashMap<Integer, String>();
         ages.put(16, "16 years");
-        context.put("ages", ages);
+        variables.put("ages", ages);
 
         final String output = variable.render(context, lookupImpls);
 

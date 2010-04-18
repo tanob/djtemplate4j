@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static java.util.Collections.unmodifiableList;
+
 public class VariableTokenParser {
     private static final String FILTER_SEPARATOR_REGEX = Pattern.quote("|");
 
@@ -23,8 +25,10 @@ public class VariableTokenParser {
 
         for (int i = 1; i < varNameAndFilters.length; i++) {
             String filterPart = varNameAndFilters[i];
-            filters.add(new FilterParser(filterPart).getFilterInfo());
+            this.filters.add(new FilterParser(filterPart).getFilterInfo());
         }
+
+        this.filters = unmodifiableList(this.filters);
     }
 
     public String getVariable() {

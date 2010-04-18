@@ -9,7 +9,7 @@ public class TextNode implements Node {
         this.contents = contents;
     }
 
-    public String render(Map<String, Object> context) {
+    public String render(Context context) {
         return this.contents;
     }
 }

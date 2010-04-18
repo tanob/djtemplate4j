@@ -17,7 +17,7 @@ public class VariableNode implements Node {
         this.filters = filters;
     }
 
-    public String render(Map<String, Object> context) {
+    public String render(Context context) {
         return new Variable(this.variable, this.filters).render(context);
     }
 }

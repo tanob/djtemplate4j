@@ -11,14 +11,14 @@ public class Template {
         this.template = template;
     }
 
-    public String render(Map<String, Object> context) {
+    public String render(Context context) {
         if (nodes == null) {
             nodes = parseTemplate();
         }
         return renderTemplate(context);
     }
 
-    private String renderTemplate(Map<String, Object> context) {
+    private String renderTemplate(Context context) {
         final StringBuffer buffer = new StringBuffer();
         for (Node node : nodes) {
             buffer.append(node.render(context));

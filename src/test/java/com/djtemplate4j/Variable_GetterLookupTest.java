@@ -3,20 +3,19 @@ package com.djtemplate4j;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class Variable_GetterLookupTest {
-    private Map<String, Object> context;
+    private Map<String, Object> variables;
     private List<VariableLookup> lookupImpls;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
-        context = new HashMap<String, Object>();
+        variables = new HashMap<String, Object>();
+        context = new Context(variables, Collections.<String, Filter>emptyMap());
         lookupImpls = new ArrayList<VariableLookup>();
         lookupImpls.add(new GetterVariableLookup());
     }
@@ -24,13 +23,20 @@ public class Variable_GetterLookupTest {
     @Test
     public void shouldCallTheGetter() throws Exception {
         final Person person = new Person();
-        context.put("person", person);
+        variables.put("person", person);
 
         final Variable variable = new Variable("person.name");
 
         final String output = variable.render(context, lookupImpls);
 
         assertEquals("Haskell", output);
+    }
+
+    @Test(expected = VariableDoesNotExist.class)
+    public void shouldThrowVariableDoesNotExistIfTheMethodDoesNotExist() throws Exception {
+        final Variable variable = new Variable("person.age");
+        variables.put("person", new Person());
+        variable.render(context, lookupImpls);
     }
     
     private class Person {
