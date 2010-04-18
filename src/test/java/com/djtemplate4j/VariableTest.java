@@ -32,43 +32,11 @@ public class VariableTest {
     }
 
     @Test
-    public void shouldSupportDirectMapLookup() throws Exception {
-        final Variable variable = new Variable("person.name");
-
-        Map<String, String> person = new HashMap<String, String>();
-        person.put("name", "Haskell");
-
-        context.put("person", person);
-        final String output = variable.render(context);
-
-        assertEquals("Haskell", output);
-    }
-
-    @Test(expected = VariableDoesNotExist.class)
-    public void shouldThrowExceptionIfMapLookupDoesNotFindVariable() throws Exception {
-        final Variable variable = new Variable("person.name");
-        context.put("person", new HashMap<String, String>());
-        variable.render(context);
-    }
-
-    @Test
     public void shouldRenderNull() throws Exception {
         final Variable variable = new Variable("name");
         context.put("name", null);
         final String output = variable.render(context);
-        
+
         assertEquals("null", output);
-    }
-
-    @Test
-    public void shouldSupportMapKeysThatAreNotString() throws Exception {
-        final Variable variable = new Variable("ages.16");
-        final HashMap<Integer, String> ages = new HashMap<Integer, String>();
-        ages.put(16, "16 years");
-        context.put("ages", ages);
-        
-        final String output = variable.render(context);
-
-        assertEquals("16 years", output);
     }
 }
