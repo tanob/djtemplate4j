@@ -16,7 +16,7 @@ public class VariableTest {
     @Before
     public void setUp() throws Exception {
         variables = new HashMap<String, Object>();
-        context = new Context(variables, Collections.<String, Filter>emptyMap());
+        context = new Context(variables);
     }
 
     @Test(expected = VariableDoesNotExist.class)

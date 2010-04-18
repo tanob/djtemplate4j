@@ -15,7 +15,7 @@ public class Variable_MapLookupTest {
     @Before
     public void setUp() throws Exception {
         variables = new HashMap<String, Object>();
-        context = new Context(variables, Collections.<String, Filter>emptyMap());
+        context = new Context(variables);
         lookupImpls = new ArrayList<VariableLookup>();
         lookupImpls.add(new MapVariableLookup());
     }
