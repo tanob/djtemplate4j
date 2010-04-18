@@ -3,6 +3,7 @@ package com.djtemplate4j;
 import com.djtemplate4j.exceptions.VariableDoesNotExist;
 import com.djtemplate4j.maybe.Maybe;
 import com.djtemplate4j.variableLookup.GetterVariableLookup;
+import com.djtemplate4j.variableLookup.ListIntegerIndexVariableLookup;
 import com.djtemplate4j.variableLookup.MapVariableLookup;
 import com.djtemplate4j.variableLookup.MethodVariableLookup;
 
@@ -18,6 +19,7 @@ public class Variable {
     private final String variable;
     private boolean complexLookup;
     private VariableLookup mapLookup = new MapVariableLookup();
+    private List<VariableLookup> defaultImplementations;
     private final List<FilterInfo> filters;
 
     public Variable(String variable) {
@@ -31,7 +33,7 @@ public class Variable {
     }
 
     public String render(Context context) {
-        return render(context, Arrays.asList(mapLookup, new GetterVariableLookup(), new MethodVariableLookup()));
+        return render(context, getDefaultImplementations());
     }
 
     public String render(Context context, List<VariableLookup> lookupImpls) {
@@ -45,7 +47,25 @@ public class Variable {
             objToRender = simpleLookupOnMap(this.variable, context.getVariables());
         }
 
-        return objToStringOrNull(objToRender);
+        return applyFilters(objToStringOrNull(objToRender), context);
+    }
+
+    private List<VariableLookup> getDefaultImplementations() {
+        if (defaultImplementations == null) {
+            defaultImplementations = Arrays.asList(mapLookup, new GetterVariableLookup(),
+                    new MethodVariableLookup(), new ListIntegerIndexVariableLookup());
+        }
+
+        return defaultImplementations;
+    }
+
+    private String applyFilters(String input, Context context) {
+        for (FilterInfo filterInfo : filters) {
+            Filter filter = context.getFilterInstance(filterInfo);
+            input = filter.filter(input);
+        }
+
+        return input;
     }
 
     // specify what is the key and in which context we could not find that key, like django does:
