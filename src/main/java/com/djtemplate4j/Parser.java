@@ -24,7 +24,8 @@ public class Parser {
         if (token instanceof TextToken) {
             return new TextNode(token.getContents());
         } else if (token instanceof VariableToken) {
-            return new VariableNode(token.getContents());
+            final VariableTokenParser variableTokenParser = new VariableTokenParser(token.getContents());
+            return new VariableNode(variableTokenParser.getVariable(), variableTokenParser.getFilters());
         }
         return null;
     }
