@@ -1,5 +1,6 @@
 package com.djtemplate4j;
 
+import com.djtemplate4j.exceptions.VariableDoesNotExist;
 import org.junit.Before;
 import org.junit.Test;
 

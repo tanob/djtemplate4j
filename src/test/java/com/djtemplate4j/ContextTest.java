@@ -1,5 +1,6 @@
 package com.djtemplate4j;
 
+import com.djtemplate4j.exceptions.FilterDoesNotExist;
 import com.djtemplate4j.filters.UpperFilter;
 import org.junit.Before;
 import org.junit.Test;

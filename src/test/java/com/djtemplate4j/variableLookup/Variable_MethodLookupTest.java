@@ -2,8 +2,8 @@ package com.djtemplate4j.variableLookup;
 
 import com.djtemplate4j.Context;
 import com.djtemplate4j.Variable;
-import com.djtemplate4j.VariableDoesNotExist;
 import com.djtemplate4j.VariableLookup;
+import com.djtemplate4j.exceptions.VariableDoesNotExist;
 import org.junit.Before;
 import org.junit.Test;
 

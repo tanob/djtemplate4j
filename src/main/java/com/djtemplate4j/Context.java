@@ -1,5 +1,7 @@
 package com.djtemplate4j;
 
+import com.djtemplate4j.exceptions.FilterDoesNotExist;
+
 import java.util.Collections;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.djtemplate4j;
+package com.djtemplate4j.exceptions;
 
 
 public class VariableDoesNotExist extends RuntimeException {
