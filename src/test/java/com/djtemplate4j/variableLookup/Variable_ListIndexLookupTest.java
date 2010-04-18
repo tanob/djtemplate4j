@@ -1,5 +1,9 @@
-package com.djtemplate4j;
+package com.djtemplate4j.variableLookup;
 
+import com.djtemplate4j.Context;
+import com.djtemplate4j.Variable;
+import com.djtemplate4j.VariableDoesNotExist;
+import com.djtemplate4j.VariableLookup;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +42,7 @@ public class Variable_ListIndexLookupTest {
     @Test(expected = VariableDoesNotExist.class)
     public void shouldThrowVariableDoesNotExistWhenIndexDoesNotExistOnList() throws Exception {
         final Variable variable = new Variable("names.1");
-        
+
         variables.put("names", Collections.<Object>emptyList());
         variable.render(context, lookupImpls);
     }

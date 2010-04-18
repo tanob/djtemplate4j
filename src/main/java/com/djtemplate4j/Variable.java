@@ -1,6 +1,9 @@
 package com.djtemplate4j;
 
 import com.djtemplate4j.maybe.Maybe;
+import com.djtemplate4j.variableLookup.GetterVariableLookup;
+import com.djtemplate4j.variableLookup.MapVariableLookup;
+import com.djtemplate4j.variableLookup.MethodVariableLookup;
 
 import java.util.*;
 import java.util.regex.Pattern;

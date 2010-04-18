@@ -1,5 +1,6 @@
-package com.djtemplate4j;
+package com.djtemplate4j.variableLookup;
 
+import com.djtemplate4j.VariableLookup;
 import com.djtemplate4j.maybe.Maybe;
 
 import java.util.HashMap;

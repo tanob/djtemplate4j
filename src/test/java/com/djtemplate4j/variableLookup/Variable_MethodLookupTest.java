@@ -1,5 +1,9 @@
-package com.djtemplate4j;
+package com.djtemplate4j.variableLookup;
 
+import com.djtemplate4j.Context;
+import com.djtemplate4j.Variable;
+import com.djtemplate4j.VariableDoesNotExist;
+import com.djtemplate4j.VariableLookup;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,14 +30,14 @@ public class Variable_MethodLookupTest {
 
         variables.put("list", Arrays.asList(1, 2));
         final String output = variable.render(context, lookupImpls);
-        
+
         assertEquals("2", output);
     }
 
     @Test(expected = VariableDoesNotExist.class)
     public void shouldThrowVariableDoesNotExistWhenMethodDoesNotExist() throws Exception {
         final Variable variable = new Variable("list.somethingThatDoesNotExist");
-        
+
         variables.put("list", Arrays.asList(1, 2));
         variable.render(context, lookupImpls);
     }

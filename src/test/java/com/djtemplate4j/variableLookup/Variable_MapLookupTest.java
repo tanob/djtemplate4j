@@ -1,9 +1,16 @@
-package com.djtemplate4j;
+package com.djtemplate4j.variableLookup;
 
+import com.djtemplate4j.Context;
+import com.djtemplate4j.Variable;
+import com.djtemplate4j.VariableDoesNotExist;
+import com.djtemplate4j.VariableLookup;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,7 +26,7 @@ public class Variable_MapLookupTest {
         lookupImpls = new ArrayList<VariableLookup>();
         lookupImpls.add(new MapVariableLookup());
     }
-    
+
     @Test
     public void shouldSupportDirectMapLookup() throws Exception {
         final Variable variable = new Variable("person.name");
