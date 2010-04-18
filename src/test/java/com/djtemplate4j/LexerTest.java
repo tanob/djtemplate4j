@@ -29,7 +29,8 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(1, tokens.size());
-        assertTrue(tokens.get(0) instanceof TextToken);
+        
+        assertTextWithContent(tokens.get(0), " \t\n\r\n");
     }
     
     @Test
@@ -40,23 +41,12 @@ public class LexerTest {
         assertNotNull(tokens);
         assertEquals(6, tokens.size());
 
-        assertTrue(tokens.get(0) instanceof TextToken);
-        assertEquals("Variable: ", tokens.get(0).getContents());
-
-        assertTrue(tokens.get(1) instanceof VariableToken);
-        assertEquals("var1", tokens.get(1).getContents());
-
-        assertTrue(tokens.get(2) instanceof TextToken);
-        assertEquals(" ", tokens.get(2).getContents());
-        
-        assertTrue(tokens.get(3) instanceof BlockToken);
-        assertEquals("block", tokens.get(3).getContents());
-
-        assertTrue(tokens.get(4) instanceof VariableToken);
-        assertEquals("var2|upper", tokens.get(4).getContents());
-
-        assertTrue(tokens.get(5) instanceof BlockToken);
-        assertEquals("endblock", tokens.get(5).getContents());
+        assertTextWithContent(tokens.get(0), "Variable: ");
+        assertVariableWithContent(tokens.get(1), "var1");
+        assertTextWithContent(tokens.get(2), " ");
+        assertBlockWithContent(tokens.get(3), "block");
+        assertVariableWithContent(tokens.get(4), "var2|upper");
+        assertBlockWithContent(tokens.get(5), "endblock");
     }
 
     @Test
@@ -66,10 +56,9 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(2, tokens.size());
-        assertTrue(tokens.get(0) instanceof BlockToken);
-        assertEquals("block", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof TextToken);
-        assertEquals(" text", tokens.get(1).getContents());
+
+        assertBlockWithContent(tokens.get(0), "block");
+        assertTextWithContent(tokens.get(1), " text");
     }
 
     @Test
@@ -79,10 +68,9 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(2, tokens.size());
-        assertTrue(tokens.get(0) instanceof TextToken);
-        assertEquals("text ", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof BlockToken);
-        assertEquals("block", tokens.get(1).getContents());
+
+        assertTextWithContent(tokens.get(0), "text ");
+        assertBlockWithContent(tokens.get(1), "block");
     }
 
     @Test
@@ -92,12 +80,10 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(3, tokens.size());
-        assertTrue(tokens.get(0) instanceof TextToken);
-        assertEquals("text ", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof BlockToken);
-        assertEquals("block", tokens.get(1).getContents());
-        assertTrue(tokens.get(2) instanceof TextToken);
-        assertEquals(" text", tokens.get(2).getContents());
+
+        assertTextWithContent(tokens.get(0), "text ");
+        assertBlockWithContent(tokens.get(1), "block");
+        assertTextWithContent(tokens.get(2), " text");
     }
 
     @Test
@@ -107,10 +93,9 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(2, tokens.size());
-        assertTrue(tokens.get(0) instanceof VariableToken);
-        assertEquals("var", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof TextToken);
-        assertEquals(" text", tokens.get(1).getContents());
+
+        assertVariableWithContent(tokens.get(0), "var");
+        assertTextWithContent(tokens.get(1), " text");
     }
 
     @Test
@@ -120,10 +105,9 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(2, tokens.size());
-        assertTrue(tokens.get(0) instanceof TextToken);
-        assertEquals("text", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof VariableToken);
-        assertEquals("var", tokens.get(1).getContents());
+
+        assertTextWithContent(tokens.get(0), "text");
+        assertVariableWithContent(tokens.get(1), "var");
     }
 
     @Test
@@ -133,12 +117,10 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(3, tokens.size());
-        assertTrue(tokens.get(0) instanceof TextToken);
-        assertEquals("text ", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof VariableToken);
-        assertEquals("var", tokens.get(1).getContents());
-        assertTrue(tokens.get(2) instanceof TextToken);
-        assertEquals(" text", tokens.get(2).getContents());
+
+        assertTextWithContent(tokens.get(0), "text ");
+        assertVariableWithContent(tokens.get(1), "var");
+        assertTextWithContent(tokens.get(2), " text");
     }
 
     @Test
@@ -148,12 +130,41 @@ public class LexerTest {
 
         assertNotNull(tokens);
         assertEquals(3, tokens.size());
-        assertTrue(tokens.get(0) instanceof BlockToken);
-        assertEquals("block", tokens.get(0).getContents());
-        assertTrue(tokens.get(1) instanceof TextToken);
-        assertEquals("text\nnewline", tokens.get(1).getContents());
-        assertTrue(tokens.get(2) instanceof BlockToken);
-        assertEquals("endblock", tokens.get(2).getContents());
+        
+        assertBlockWithContent(tokens.get(0), "block");
+        assertTextWithContent(tokens.get(1), "text\nnewline");
+        assertBlockWithContent(tokens.get(2), "endblock");
+    }
+
+    @Test
+    public void shouldWorkWithBlockInsideBlock() throws Exception {
+        final Lexer lexer = new Lexer("{% block1 %}{% block2 %}some text{% endblock2 %}{% single block %}{% endblock1 %}");
+        final List<Token> tokens = lexer.tokens();
+
+        assertNotNull(tokens);
+        assertEquals(6, tokens.size());
+
+        assertBlockWithContent(tokens.get(0), "block1");
+        assertBlockWithContent(tokens.get(1), "block2");
+        assertTextWithContent(tokens.get(2), "some text");
+        assertBlockWithContent(tokens.get(3), "endblock2");
+        assertBlockWithContent(tokens.get(4), "single block");
+        assertBlockWithContent(tokens.get(5), "endblock1");
+    }
+
+    private void assertTextWithContent(Token token, String expectedContent) {
+        assertTrue(token instanceof TextToken);
+        assertEquals(expectedContent, token.getContents());
+    }
+
+    private void assertVariableWithContent(Token token, String expectedContent) {
+        assertTrue(token instanceof VariableToken);
+        assertEquals(expectedContent, token.getContents());
+    }
+
+    public void assertBlockWithContent(Token token, String expectedContent) {
+        assertTrue(token instanceof BlockToken);
+        assertEquals(expectedContent, token.getContents());
     }
 }
 
