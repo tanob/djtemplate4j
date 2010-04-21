@@ -1,9 +1,11 @@
 package com.djtemplate4j;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Parser {
+    private static final String END_BLOCK_PREFIX = "end";
+
     private final List<Token> tokens;
 
     public Parser(List<Token> tokens) {
@@ -11,22 +13,32 @@ public class Parser {
     }
 
     public List<Node> parse() {
-        ArrayList<Node> nodes = new ArrayList<Node>();
+        final LinkedList<BlockNode> blockStack = new LinkedList<BlockNode>();
+        blockStack.push(new BlockNode("ROOT"));
 
         for (Token token : tokens) {
-            nodes.add(transformToNode(token));
+            final BlockNode current = blockStack.peek();
+
+            if (token instanceof TextToken) {
+                current.add(new TextNode(token.getContents()));
+            } else if (token instanceof VariableToken) {
+                final VariableTokenParser variableTokenParser = new VariableTokenParser(token.getContents());
+                current.add(new VariableNode(variableTokenParser.getVariable(), variableTokenParser.getFilters()));
+            } else if (token instanceof BlockToken) {
+                boolean isCloseBlock = token.getContents().startsWith(END_BLOCK_PREFIX);
+                if (!isCloseBlock) {
+                    final BlockNode newBlock = new BlockNode(token.getContents());
+                    current.add(newBlock);
+                    blockStack.push(newBlock);
+                } else {
+                    final String blockName = token.getContents().substring(END_BLOCK_PREFIX.length());
+                    while (!blockName.equals(blockStack.pop().getName())) ;
+                }
+            }
         }
 
-        return nodes;
-    }
+        // TODO throw exception if blockStack.size != 1
 
-    private Node transformToNode(Token token) {
-        if (token instanceof TextToken) {
-            return new TextNode(token.getContents());
-        } else if (token instanceof VariableToken) {
-            final VariableTokenParser variableTokenParser = new VariableTokenParser(token.getContents());
-            return new VariableNode(variableTokenParser.getVariable(), variableTokenParser.getFilters());
-        }
-        return null;
+        return blockStack.pop().getNodes();
     }
 }

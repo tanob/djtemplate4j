@@ -2,7 +2,6 @@ package com.djtemplate4j;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class VariableNode implements Node {
     private final String variable;
